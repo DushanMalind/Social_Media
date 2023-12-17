@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/button"
 import {useForm} from "react-hook-form";
 import {signupValidation} from "@/lib/validation";
 import {z} from "zod";
+import {Loader} from "lucide-react";
 
 /*FormDescription*/
 
 const SigniupFrom = () => {
-const isLoding=true;
+const isLoding=false;
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof signupValidation>>({
@@ -110,7 +111,7 @@ const isLoding=true;
                     <Button type="submit" className="shad-button_primary">
                         {isLoding ?(
                             <div className="flex-center gap-2">
-                                Loading...
+                               <Loader/> Loading...
                             </div>
                         ): "Sign Up"}
                     </Button>
