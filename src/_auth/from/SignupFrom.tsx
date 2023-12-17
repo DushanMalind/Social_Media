@@ -17,7 +17,10 @@ const SigniupFrom = () => {
     const form = useForm<z.infer<typeof signupValidation>>({
         resolver: zodResolver(signupValidation),
         defaultValues: {
-            username: "",
+            name: '',
+            username: '',
+            email: '',
+            password: '',
         },
     });
 
@@ -29,8 +32,13 @@ const SigniupFrom = () => {
     }
 
     return (
-        <div>
+
             <Form {...form}>
+                <div className="sm:w-420 flex-content flex-col">
+                    <img src="../../../public/assets/images/logo.svg" alt=""/>
+                </div>
+
+
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <FormField
                         control={form.control}
@@ -51,7 +59,7 @@ const SigniupFrom = () => {
                     <Button type="submit">Submit</Button>
                 </form>
             </Form>
-        </div>
+
     );
 
 }
