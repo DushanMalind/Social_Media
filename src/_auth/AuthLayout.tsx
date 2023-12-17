@@ -4,7 +4,7 @@ import React  from "react";
 const AuthLayout = () => {
     return (
         <div>
-            layout
+            AuthLayout
         </div>
     );
 

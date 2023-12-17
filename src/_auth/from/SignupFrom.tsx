@@ -1,10 +1,12 @@
 // @ts-ignore
 import React from "react";
+import { Button } from "@/components/ui/button"
+
 
 const SigniupFrom = () => {
     return (
         <div>
-            signupFrom
+            <Button>Click me</Button>
         </div>
     );
 
