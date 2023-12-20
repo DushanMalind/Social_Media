@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import {useForm} from "react-hook-form";
 import {signupValidation} from "@/lib/validation";
 import {z} from "zod";
+import {Link} from "react-router-dom";
 import {Loader} from "lucide-react";
 
 /*FormDescription*/
@@ -28,7 +29,7 @@ const isLoding=false;
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof signupValidation>) {
         // Do something with the form values.
-        // ✅ This will be type-safe and validated.
+        // This will be type-safe and validated.
         console.log(values)
     }
 
@@ -115,6 +116,12 @@ const isLoding=false;
                             </div>
                         ): "Sign Up"}
                     </Button>
+
+                    <p className="text-small-regular text-light-2 text-center mt-2">
+                        Already have an account?
+                        <Link to="/sign-in" className="text-primary-500 text-small-semibold ml-1">Log In</Link>
+                    </p>
+
                 </form>
                 </div>
             </Form>
