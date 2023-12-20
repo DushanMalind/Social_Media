@@ -1,6 +1,6 @@
 import {ID} from 'appwrite';
 import {INewUser} from "@/type";
-import {account} from "@/lib/appWrite/config.ts";
+import {account, avatars} from "@/lib/appWrite/config.ts";
 
 
 
@@ -11,10 +11,38 @@ export async function createUserAccount(user: INewUser){
             user.email,
             user.password,
             user.name
-        )
-        return newAccount;
+        );
+
+        if (!newAccount) throw Error;
+
+        const avatarUrl=avatars.getInitials(user.name);
+
+        const newUser=await saveUserToDB({
+            accountId: newAccount.$id,
+            name:newAccount.name,
+            email: newAccount.email,
+            username: user.username,
+            imageUrl: avatarUrl
+        });
+
+        return newUser;
     }catch (error){
         console.log(error);
         return error;
+    }
+}
+
+export async function saveUserToDB(user:{
+    accountId: string;
+    email: string;
+    name: string;
+    imageUrl: URL;
+    username?: string;
+}){
+    try {
+
+    }catch (error){
+        console.log(error);
+
     }
 }
