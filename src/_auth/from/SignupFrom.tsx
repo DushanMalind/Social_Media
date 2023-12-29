@@ -7,16 +7,18 @@ import { Button } from "@/components/ui/button"
 import {useForm} from "react-hook-form";
 import {signupValidation} from "@/lib/validation";
 import {z} from "zod";
-import {Link} from "react-router-dom";
+import {Link,useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast"
 import {Loader} from "lucide-react";
 import {useCreateUserAccount, useSignAccount} from "@/lib/react-query/queriesAndMutations.tsx";
+import {useUserContext} from "@/context/AuthContext.tsx";
 
 /*FormDescription*/
 
 const SigniupFrom = () => {
     const { toast } = useToast()
-
+    const {checkAuthUser,isLoading:isUserLoading}=useUserContext();
+    const navigate=useNavigate();
 
     const {mutateAsync:createUserAccount,isLoading:isCreatingUser}=useCreateUserAccount();
 
@@ -49,6 +51,15 @@ const SigniupFrom = () => {
 
        if (!session){
            return toast({title:'Sign In failed. Please try again.'})
+       }
+
+       const isLoggedIn=await checkAuthUser();
+
+       if (isLoggedIn){
+           form.reset()
+           navigate('/')
+       }else {
+              return toast({title:'Sign In failed. Please try again.'})
        }
     }
 
