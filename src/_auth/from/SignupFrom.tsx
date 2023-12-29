@@ -10,14 +10,17 @@ import {z} from "zod";
 import {Link} from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast"
 import {Loader} from "lucide-react";
-import {createUserAccount} from "@/lib/appWrite/api.ts";
+import {useCreateUserAccount, useSignAccount} from "@/lib/react-query/queriesAndMutations.tsx";
 
 /*FormDescription*/
 
 const SigniupFrom = () => {
     const { toast } = useToast()
-const isLoding=false;
 
+
+    const {mutateAsync:createUserAccount,isLoading:isCreatingUser}=useCreateUserAccount();
+
+    const {mutateAsync: signInAccount, isLoading: isSigningIn}=useSignAccount();
     // 1. Define your form.
     const form = useForm<z.infer<typeof signupValidation>>({
         resolver: zodResolver(signupValidation),
@@ -39,7 +42,14 @@ const isLoding=false;
            })
        }
 
-       //const session=await signInAccount()
+       const session=await signInAccount({
+              email:values.email,
+              password:values.password
+         });
+
+       if (!session){
+           return toast({title:'Sign In failed. Please try again.'})
+       }
     }
 
     return (
@@ -119,7 +129,7 @@ const isLoding=false;
                         )}
                     />
                     <Button type="submit" className="shad-button_primary">
-                        {isLoding ?(
+                        {isCreatingUser ?(
                             <div className="flex-center gap-2">
                                <Loader/> Loading...
                             </div>
@@ -127,7 +137,7 @@ const isLoding=false;
                     </Button>
 
                     <p className="text-small-regular text-light-2 text-center mt-2">
-                        Already have an account?
+                        Already have an account? 1.32
                         <Link to="/sign-in" className="text-primary-500 text-small-semibold ml-1">Log In</Link>
                     </p>
 
