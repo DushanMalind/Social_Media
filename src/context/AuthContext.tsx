@@ -1,5 +1,7 @@
 import React, {createContext,useContext,useEffect,useState} from 'react';
 import {IContextType, IUser} from "@/type";
+import {getCurrentUser} from "@/lib/appWrite/api.ts";
+import {useNavigate} from "react-router-dom";
 
 export const INITIAL_USER={
     id:'',
@@ -30,9 +32,26 @@ const AuthProvider = ({children}:{children:React.ReactNode}) =>{
     const [isLoading,setIsLoading]=useState(false);
     const [isAuthenticated,setIsAuthenticated]=useState(false);
 
+    const navigate=useNavigate();
+
     const checkAuthUser=async ()=>{
         try {
-            const currentAccount-await getCurrentUser();
+            const currentAccount=await getCurrentUser();
+
+            if (currentAccount){
+                setUser({
+                    id:currentAccount.$id,
+                    name:currentAccount.name,
+                    username:currentAccount.username,
+                    email:currentAccount.email,
+                    imageUrl:currentAccount.photo,
+                    bio:currentAccount.bio
+                });
+                setIsAuthenticated(true);
+
+                return true;
+            }
+            return false;
         }catch (error) {
             console.log(error);
             return false;
@@ -40,6 +59,16 @@ const AuthProvider = ({children}:{children:React.ReactNode}) =>{
             setIsLoading(false);
         }
     };
+
+    useEffect(()=>{
+       if (
+           localStorage.getItem('cookieFallback') === '[]' ||
+           localStorage.getItem('cookieFallback') === null
+           )navigate('/sign-in');
+
+         checkAuthUser();
+
+    },[]);
 
     const value={
         user,
@@ -50,11 +79,12 @@ const AuthProvider = ({children}:{children:React.ReactNode}) =>{
         checkAuthUser
     }
 
-    return(
-        <AuthContext.Provider value={value}>
-            {children}
-        </AuthContext.Provider>
-    )
+
+
+    // @ts-ignore
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export default AuthContext;
+export default AuthProvider;
+
+export const useUserContext = () => useContext(AuthContext);
