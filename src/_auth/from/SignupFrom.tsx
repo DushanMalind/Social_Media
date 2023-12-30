@@ -10,19 +10,20 @@ import {z} from "zod";
 import {Link,useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast"
 import {Loader} from "lucide-react";
-import {useCreateUserAccount, useSignAccount} from "@/lib/react-query/queriesAndMutations.tsx";
+import {useCreateUserAccount, useSignInAccount} from "@/lib/react-query/queriesAndMutations.tsx";
 import {useUserContext} from "@/context/AuthContext.tsx";
 
 /*FormDescription*/
 
 const SigniupFrom = () => {
     const { toast } = useToast()
+    // @ts-ignore
     const {checkAuthUser,isLoading:isUserLoading}=useUserContext();
     const navigate=useNavigate();
 
-    const {mutateAsync:createUserAccount,isLoading:isCreatingUser}=useCreateUserAccount();
+    const {mutateAsync:createUserAccount,isPending:isCreatingAccount}=useCreateUserAccount();
 
-    const {mutateAsync: signInAccount, isLoading: isSigningIn}=useSignAccount();
+    const {mutateAsync: signInAccount, isPending: isSigningIn}=useSignInAccount();
     // 1. Define your form.
     const form = useForm<z.infer<typeof signupValidation>>({
         resolver: zodResolver(signupValidation),
@@ -40,7 +41,7 @@ const SigniupFrom = () => {
 
        if (!newUser){
            return toast({
-               title: "sign Up failed. Please try again."
+               title: "sign Up failed 1 . Please try again."
            })
        }
 
@@ -50,7 +51,7 @@ const SigniupFrom = () => {
          });
 
        if (!session){
-           return toast({title:'Sign In failed. Please try again.'})
+           return toast({title:'Sign In failed 2. Please try again.'})
        }
 
        const isLoggedIn=await checkAuthUser();
@@ -59,7 +60,7 @@ const SigniupFrom = () => {
            form.reset()
            navigate('/')
        }else {
-              return toast({title:'Sign In failed. Please try again.'})
+              return toast({title:'Sign In failed 3. Please try again.'})
        }
     }
 
@@ -140,7 +141,7 @@ const SigniupFrom = () => {
                         )}
                     />
                     <Button type="submit" className="shad-button_primary">
-                        {isCreatingUser ?(
+                        {isCreatingAccount ?(
                             <div className="flex-center gap-2">
                                <Loader/> Loading...
                             </div>
@@ -148,7 +149,7 @@ const SigniupFrom = () => {
                     </Button>
 
                     <p className="text-small-regular text-light-2 text-center mt-2">
-                        Already have an account? 1.32
+                        Already have an account? 1.32 2.06
                         <Link to="/sign-in" className="text-primary-500 text-small-semibold ml-1">Log In</Link>
                     </p>
 
